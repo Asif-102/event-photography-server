@@ -32,7 +32,15 @@ client.connect(err => {
         })
     })
 
-    
+    app.get('/admin',(req,res)=>{
+        const email = req.query.email;
+        adminCollection.find({email:email})
+        .toArray((err, documents)=>{
+            res.send(documents)
+        })
+    })
+
+
 });
 
 
