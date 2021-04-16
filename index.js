@@ -23,6 +23,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
     const adminCollection = client.db(process.env.DB_NAME).collection("admins");
     const reviewCollection = client.db(process.env.DB_NAME).collection("reviews");
+    const serviceCollection = client.db(process.env.DB_NAME).collection("services");
     
     app.post('/addAdmin', (req,res)=>{
         const newAdmin = req.body;
@@ -51,6 +52,26 @@ client.connect(err => {
 
     app.get('/reviews',(req,res)=>{
         reviewCollection.find()
+        .toArray((err, documents)=>{
+            res.send(documents)
+        })
+    })
+
+    app.post('/addService', (req,res)=>{
+        const newService = req.body;
+        if (newService.image !== null) {
+            serviceCollection.insertOne(newService)
+              .then(result => {
+                res.send(result.insertedCount > 0)
+              })
+          }
+          else {
+            console.log('Uploaded fail')
+          }
+    })
+
+    app.get('/services',(req,res)=>{
+        serviceCollection.find()
         .toArray((err, documents)=>{
             res.send(documents)
         })
