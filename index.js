@@ -130,6 +130,18 @@ client.connect(err => {
         })
     })
 
+    app.patch('/changeBookState/:id',(req,res)=>{
+        
+        bookingCollection.updateOne({_id:ObjectID(req.params.id)},
+        {
+            $set:{bookingState:req.body.bookingState}
+        })
+        .then(result => {
+            res.send(result.modifiedCount > 0)
+        })
+    })
+
+
 
 
 
