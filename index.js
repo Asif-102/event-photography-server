@@ -9,6 +9,7 @@ const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.wp8tr.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
@@ -117,6 +118,16 @@ client.connect(err => {
         serviceCollection.findOneAndDelete({_id: id})
         .then(documents => res.send(!!documents.value))
       })
+
+    app.patch('/updateService/:id',(req,res)=>{
+        serviceCollection.updateOne({_id:ObjectID(req.params.id)},
+        {
+            $set:{title:req.body.title, price:req.body.price}
+        })
+        .then(result => {
+            res.send(result.modifiedCount > 0)
+        })
+    })
 
 
 
