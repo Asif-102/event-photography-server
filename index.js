@@ -95,6 +95,26 @@ client.connect(err => {
         })
     })
 
+    app.get('/userBooked', (req,res)=>{
+        const email = req.query.email;
+        bookingCollection.find({userEmail:email})
+        .toArray((err, documents)=>{
+            res.send(documents)
+        })
+
+    })
+
+    app.get('/allBooking', (req,res)=>{
+        bookingCollection.find()
+        .toArray((err, documents)=>{
+            res.send(documents)
+        })
+
+    })
+
+
+    
+
 });
 
 
