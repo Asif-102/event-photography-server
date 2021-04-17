@@ -24,6 +24,7 @@ client.connect(err => {
     const adminCollection = client.db(process.env.DB_NAME).collection("admins");
     const reviewCollection = client.db(process.env.DB_NAME).collection("reviews");
     const serviceCollection = client.db(process.env.DB_NAME).collection("services");
+    const bookingCollection = client.db(process.env.DB_NAME).collection("bookings");
     
     app.post('/addAdmin', (req,res)=>{
         const newAdmin = req.body;
@@ -77,6 +78,22 @@ client.connect(err => {
         })
     })
 
+    app.get('/getService',(req,res)=>{
+        const id = ObjectID(req.query._id);
+        serviceCollection.find({_id:id})
+        .toArray((err,documents)=>{
+            res.send(documents);
+        })
+    })
+
+    app.post('/addBooking', (req,res)=>{
+        const newBooking = req.body;
+        // console.log(newBooking)
+        bookingCollection.insertOne(newBooking)
+        .then(result => {
+            res.send(result.insertedCount > 0)
+        })
+    })
 
 });
 
